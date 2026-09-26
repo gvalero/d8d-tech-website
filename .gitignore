@@ -1,0 +1,35 @@
+# Dependencies and generated application output
+node_modules/
+dist/
+build/
+out/
+.next/
+.astro/
+.vite/
+.cache/
+coverage/
+test-results/
+playwright-report/
+*.tsbuildinfo
+*.log
+
+# Local secrets and private material
+.env
+.env.*
+!.env.example
+private/
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Local hosting state
+.vercel/
+.netlify/
+.wrangler/
+
+# Operating-system files
+.DS_Store
+Thumbs.db
+Desktop.ini

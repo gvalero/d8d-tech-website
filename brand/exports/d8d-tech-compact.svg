@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 64" role="img" aria-labelledby="title desc">
+  <title id="title">D8D Tech compact mark</title>
+  <desc id="desc">Original D8D Tech compact mark using D, eight and D forms.</desc>
+  <path fill="#0D1B2A" d="M7 10v44h14a22 22 0 1 0 0-44H7Zm14 8a14 14 0 1 1 0 28h-6V18h6Z"/>
+  <path fill="#30BFA5" d="M55 11c-9 0-15 6-15 13 0 6 4 10 9 12-6 3-10 7-10 13 0 8 7 14 16 14s16-6 16-14c0-6-4-10-10-13 5-2 9-6 9-12 0-7-6-13-15-13Zm0 8c4 0 7 3 7 6s-3 6-7 6-7-3-7-6 3-6 7-6Zm0 21c5 0 8 3 8 7s-3 8-8 8-8-4-8-8 3-7 8-7Z"/>
+  <path fill="#0D1B2A" d="M103 10v44H89a22 22 0 1 1 0-44h14Zm-14 8a14 14 0 1 0 0 28h6V18h-6Z"/>
+</svg>

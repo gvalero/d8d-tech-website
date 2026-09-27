@@ -1,0 +1,3 @@
+# D8D Tech local review prototype — not for indexing or public launch.
+User-agent: *
+Disallow: /

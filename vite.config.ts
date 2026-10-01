@@ -203,12 +203,14 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
-
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   // The custom domain serves GitHub Pages at the root, not at /<repository>/.
   base: "/",
-  plugins,
+  plugins: [
+    react(),
+    tailwindcss(),
+    ...(mode === "production" ? [] : [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()]),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "client", "src"),
@@ -240,4 +242,4 @@ export default defineConfig({
       deny: ["**/.*"],
     },
   },
-});
+}));

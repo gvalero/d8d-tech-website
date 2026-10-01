@@ -1,13 +1,13 @@
-# D8D Tech — identity and local pre-launch website
+# D8D Tech — identity and pre-launch website
 
-> **Prototype status:** This repository contains a **local owner-review prototype**, not a public launch. D8D Tech is a proposed working name for Day Eight Devices. The identity, name, legal status, launch timing and contact details remain provisional.
+> **Pre-launch status:** This repository publishes an indexable informational page at `https://d8dtech.com/`, not a trading storefront. D8D Tech is a proposed working name for Day Eight Devices. The identity, legal status, launch timing and contact details remain provisional.
 
 ## What is included
 
 - An original **Dawn Loop** identity direction: D–8–D forms representing a quiet “next chapter” / renewal idea.
 - Editable SVG source, full-colour / light / dark / one-colour variants, transparent PNGs and a favicon set.
 - A responsive React + Vite pre-launch marketing page with clear used-phone resale, wholesale and retail positioning; it includes a non-collecting WhatsApp/email **contact pathway** that says contact details will follow at launch.
-- No commerce, contact form, analytics, tracking, visitor-data collection or external image/font request.
+- No commerce or contact form. Optional analytics remain disabled until their IDs, controller identity, privacy contact and explicit consent handling are ready; see `SEO-AND-MEASUREMENT.md`.
 - Brand guidance, a visual reference board and a record of asset provenance.
 
 The visual direction is deliberately restrained: Apple-adjacent in its clarity, spacing and material simplicity, with only a subtle Day Eight / new-beginning resonance rather than overt religious symbolism.
@@ -38,8 +38,9 @@ pnpm preview   # Preview the built output
 | `client/src/pages/Home.tsx` | Main accessible pre-launch page and factual copy. |
 | `client/src/components/BrandMark.tsx` | Inline original wordmark/compact-mark component used in the page. |
 | `client/src/index.css` | Responsive layout and reusable design tokens. |
-| `client/index.html` | Provisional metadata with no-index posture; no guessed canonical URL or analytics. |
-| `client/public/robots.txt` | Crawl deterrent for a future review build; not access control. |
+| `client/index.html` | Canonical and pre-launch search/social metadata. |
+| `client/public/robots.txt` | Crawl policy: discovery allowed, named training crawlers blocked. |
+| `SEO-AND-MEASUREMENT.md` | Search Console/Bing setup and consent-gated analytics activation. |
 | `brand/source/` | Editable primary and compact SVG vector sources. |
 | `brand/exports/` | Practical logo SVG, transparent PNG and favicon exports. |
 | `brand/preview/index.html` | Local visual reference board with light/dark and small-size mark presentation. |
@@ -68,7 +69,7 @@ Start with these files:
 - The end-of-page contact pathway deliberately does not invent an email address or WhatsApp number, create a dead external link or collect a visitor message; it plainly states that those contact details will follow at launch.
 - It does not invent a company number, legal name, registered address, email, delivery coverage, certification, supplier, inventory, warranty, environmental statistic or operating capacity.
 - It does not include Product, Offer, review or fictional Organisation structured data.
-- It does not use a domain name or canonical URL, and remains no-index by default.
+- It uses the owner-approved `d8dtech.com` domain and allows indexing of the factual pre-launch page.
 - It uses CSS/vector artwork rather than external visual assets; see `ASSET-LICENSES.md`.
 
 ## Review before any public launch
@@ -88,4 +89,4 @@ The following checks were completed on the local prototype:
 - Browser console/request review — no console errors were observed; resource entries stayed on the local preview origin, with no external font, imagery, analytics or other runtime request. The page contains zero forms.
 - Accessibility basics — semantic header/main/footer landmarks, labelled primary nav, descriptive logo labels, visible focus treatment, responsive reflow and a reduced-motion rule were checked. This is evidence of proportionate testing, **not** a claim of WCAG certification.
 
-The site remains a local prototype; this README must not be read as a claim of public-production readiness.
+The public informational page does not imply the proposed business is incorporated, trading or ready to accept customers.

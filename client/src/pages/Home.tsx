@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import BrandMark from "@/components/BrandMark";
+import MeasurementConsent from "@/components/MeasurementConsent";
 
 const approach = [
   {
@@ -292,6 +293,7 @@ export default function Home() {
           <p>Contact and ordering information will be announced at launch.</p>
         </div>
       </footer>
+      <MeasurementConsent />
     </div>
   );
 }

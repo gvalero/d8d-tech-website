@@ -43,6 +43,12 @@ jobs:
         run: pnpm check
 
       - name: Build production Pages site
+        env:
+          VITE_MEASUREMENT_ENABLED: ${{ vars.VITE_MEASUREMENT_ENABLED }}
+          VITE_GA_ID: ${{ vars.VITE_GA_ID }}
+          VITE_CLARITY_ID: ${{ vars.VITE_CLARITY_ID }}
+          VITE_PRIVACY_OPERATOR: ${{ vars.VITE_PRIVACY_OPERATOR }}
+          VITE_PRIVACY_EMAIL: ${{ vars.VITE_PRIVACY_EMAIL }}
         run: pnpm build:pages
 
       - name: Upload Pages artifact

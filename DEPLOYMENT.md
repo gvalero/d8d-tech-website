@@ -25,6 +25,6 @@ This repository publishes the D8D Tech pre-launch website through **GitHub Pages
 ## Configuration boundaries
 
 - The Pages build uses `/` as its Vite base because the custom domain serves from its root. Do not switch to the repository path: it causes JavaScript and CSS requests to return 404.
-- Keep `robots.txt` deliberately conservative until launch-search strategy is approved.
+- The owner approved indexing the factual pre-launch homepage; `robots.txt`, sitemap and canonical must stay aligned with `d8dtech.com`. See `SEO-AND-MEASUREMENT.md` for the training-bot distinction and gated measurement.
 - Add a `CNAME` file only when a production custom domain and DNS ownership are confirmed.
 - Secrets are not required for the current static site. Add external integrations only through GitHub Secrets or environment secrets—never in source files.

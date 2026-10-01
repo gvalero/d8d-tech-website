@@ -287,3 +287,15 @@ h1 em, h2 em { color: var(--mint); font-style: italic; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 1ms !important; animation-duration: 1ms !important; animation-iteration-count: 1 !important; }
 }
+
+.measurement-settings { position: fixed; right: 16px; bottom: 16px; z-index: 20; padding: 10px 14px; border: 1px solid currentColor; border-radius: 8px; background: #fff; color: #071522; cursor: pointer; }
+.measurement-consent { position: fixed; right: 16px; bottom: 16px; left: 16px; z-index: 21; max-width: 600px; max-height: calc(100vh - 32px); overflow: auto; margin: 0 auto; padding: 24px; border: 1px solid #607182; border-radius: 12px; background: #fff; color: #071522; box-shadow: 0 8px 32px #07152255; }
+.measurement-consent h2 { margin: 0 0 10px; font-size: 24px; }
+.measurement-consent p { margin: 0 0 12px; line-height: 1.5; }
+.measurement-consent a { color: #075d53; text-decoration: underline; }
+.measurement-consent label { display: block; padding: 8px 0; cursor: pointer; }
+.measurement-consent input { width: 18px; height: 18px; margin-right: 8px; vertical-align: middle; }
+.measurement-consent__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.measurement-consent button { min-height: 44px; padding: 8px 14px; border: 1px solid #071522; border-radius: 8px; background: #fff; color: #071522; cursor: pointer; }
+.measurement-consent button:last-child { background: #071522; color: #fff; }
+.measurement-consent button:focus-visible, .measurement-settings:focus-visible, .measurement-consent a:focus-visible { outline: 3px solid #bd943f; outline-offset: 2px; }

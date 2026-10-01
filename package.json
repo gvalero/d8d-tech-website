@@ -6,10 +6,11 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
-    "build:pages": "vite build && node scripts/check-pages-build.mjs",
+    "build:pages": "vite build && node scripts/prerender-pages.mjs && node scripts/check-pages-build.mjs",
     "start": "NODE_ENV=production node dist/index.js",
     "preview": "vite preview --host",
     "check": "tsc --noEmit",
+    "test": "vitest run client/src/lib/measurement.test.ts",
     "format": "prettier --write ."
   },
   "dependencies": {

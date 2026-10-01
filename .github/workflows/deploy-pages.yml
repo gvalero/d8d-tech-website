@@ -42,6 +42,9 @@ jobs:
       - name: Typecheck
         run: pnpm check
 
+      - name: Test measurement configuration
+        run: pnpm test
+
       - name: Build production Pages site
         env:
           VITE_MEASUREMENT_ENABLED: ${{ vars.VITE_MEASUREMENT_ENABLED }}

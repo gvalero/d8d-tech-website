@@ -205,13 +205,9 @@ function vitePluginStorageProxy(): Plugin {
 
 const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
 
-const isGitHubPagesBuild = process.env.GITHUB_PAGES === "true";
-const repositoryName = process.env.GITHUB_REPOSITORY?.split("/")[1];
-const pagesBase = repositoryName ? `/${repositoryName}/` : "/";
-
 export default defineConfig({
-  // Project Pages live at /<repository>/; local and non-Pages builds stay root-relative.
-  base: isGitHubPagesBuild ? pagesBase : "/",
+  // The custom domain serves GitHub Pages at the root, not at /<repository>/.
+  base: "/",
   plugins,
   resolve: {
     alias: {

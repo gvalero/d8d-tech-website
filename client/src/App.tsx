@@ -3,8 +3,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
 import NotFound from "./pages/NotFound";
 
-// Vite sets this to /<repository>/ in the GitHub Pages production build.
-// Wouter therefore receives the same base as the generated assets.
+// Keep routes aligned with Vite's asset base on the custom domain.
 const routerBase = import.meta.env.BASE_URL.replace(/\/$/, "");
 
 function SiteRouter() {

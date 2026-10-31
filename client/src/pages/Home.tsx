@@ -87,9 +87,9 @@ export default function Home() {
             <a href="#contact">Contact</a>
           </nav>
 
-          <a className="header-status" href="#status">
+          <a className="header-status" href="#contact">
             <span className="status-dot" aria-hidden="true" />
-            Launching soon
+            Get in touch
           </a>
 
           <button
@@ -155,7 +155,7 @@ export default function Home() {
               </div>
               <div className="hero-object__note">
                 <span className="hero-object__note-dot" />
-                Launching soon
+                Day Eight Devices
               </div>
             </div>
           </div>
@@ -218,13 +218,13 @@ export default function Home() {
         <section id="status" className="status section" aria-labelledby="status-title">
           <div className="status__card" data-reveal>
             <div className="status__card-top">
-              <SectionEyebrow>Launching soon</SectionEyebrow>
+              <SectionEyebrow>Our focus</SectionEyebrow>
               <span className="status-pill"><span className="status-dot" /> Ireland</span>
             </div>
             <div className="status__content">
               <h2 id="status-title">The standard is <em>taking shape.</em></h2>
               <p>
-                D8D Tech is preparing for launch in Ireland. Ordering and contact details will be shared when we are ready to open the conversation.
+                D8D Tech is developing its sourcing, testing and sales arrangements in Ireland. We welcome retail and wholesale enquiries, but are not currently accepting orders, payments or devices.
               </p>
               <div className="status__divider" />
               <ul className="status__facts">
@@ -240,20 +240,20 @@ export default function Home() {
           <div className="contact__inner" data-reveal>
             <div className="contact__heading">
               <SectionEyebrow>Start the conversation</SectionEyebrow>
-              <h2 id="contact-title">Ready to talk phones? <em>We’ll be in touch soon.</em></h2>
+              <h2 id="contact-title">Ready to talk phones? <em>Let’s connect.</em></h2>
               <p>
-                WhatsApp and email contact details will be announced as D8D Tech opens for business. We look forward to connecting with retail and wholesale partners.
+                Email us to discuss retail and wholesale partnerships. We look forward to hearing from you.
               </p>
             </div>
-            <div className="contact__channels" aria-label="Future contact channels">
+            <div className="contact__channels" aria-label="Contact channels">
               <div className="contact-channel">
                 <span className="contact-channel__icon" aria-hidden="true"><MessageCircle size={21} /></span>
                 <span><strong>WhatsApp</strong><small>Contact opening soon</small></span>
               </div>
-              <div className="contact-channel">
+              <a className="contact-channel" href="mailto:info@d8dtech.com">
                 <span className="contact-channel__icon" aria-hidden="true"><Mail size={21} /></span>
-                <span><strong>Email</strong><small>Contact opening soon</small></span>
-              </div>
+                <span><strong>Email</strong><small>info@d8dtech.com</small></span>
+              </a>
             </div>
           </div>
         </section>
@@ -285,12 +285,12 @@ export default function Home() {
           <a className="footer-brand" href="#top" aria-label="Back to top">
             <BrandMark className="footer-brand__mark" />
           </a>
-          <p>Premium pre-owned smartphones. Launching soon in Ireland.</p>
+          <p>Premium pre-owned smartphones. Based in Ireland.</p>
           <a className="footer-top-link" href="#top">Back to top <ArrowUpRight size={16} /></a>
         </div>
         <div className="site-footer__bottom">
           <p>© {new Date().getFullYear()} D8D Tech.</p>
-          <p>Contact and ordering information will be announced at launch.</p>
+          <p>Enquiries welcome. Not currently accepting orders.</p>
         </div>
       </footer>
       <MeasurementConsent />

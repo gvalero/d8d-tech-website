@@ -8,6 +8,9 @@ assert.match(html, /href="\/assets\/[^"]+\.css"/, "Pages CSS must load from the 
 assert.doesNotMatch(html, /(?:src|href)="\/d8d-tech-website\//, "Project-path assets break the custom domain");
 assert.match(html, /<div id="root"><div class="site-shell">/, "Home content must be visible to crawlers without JavaScript");
 assert.match(html, /<h1[^>]*>A sharper standard/, "The pre-launch homepage must have a crawlable heading");
+assert.match(html, /<a class="contact-channel" href="mailto:info@d8dtech\.com">/, "The email contact must open a message to the public info address");
+assert.doesNotMatch(html, /launching soon|email contact details will be announced|Contact and ordering information will be announced/i, "Remove stale launch and email placeholders");
+assert.match(html, /not currently accepting orders, payments or devices/, "Contact availability must not imply commerce is open");
 assert.match(html, /rel="canonical" href="https:\/\/d8dtech\.com\/"/);
 assert.doesNotMatch(html, /noindex|manus-runtime/, "The public page must not be blocked or include debug runtime");
 assert.ok(Buffer.byteLength(html) < 70_000, "The HTML document should stay below 70 kB uncompressed");

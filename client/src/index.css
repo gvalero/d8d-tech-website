@@ -306,5 +306,4 @@ h1 em, h2 em { color: var(--mint); font-style: italic; }
 .measurement-consent input { width: 18px; height: 18px; margin-right: 8px; vertical-align: middle; }
 .measurement-consent__actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
 .measurement-consent button { min-height: 44px; padding: 8px 14px; border: 1px solid #071522; border-radius: 8px; background: #fff; color: #071522; cursor: pointer; }
-.measurement-consent button:last-child { background: #071522; color: #fff; }
 .measurement-consent button:focus-visible, .measurement-settings:focus-visible, .measurement-consent a:focus-visible { outline: 3px solid #075d53; outline-offset: 2px; }

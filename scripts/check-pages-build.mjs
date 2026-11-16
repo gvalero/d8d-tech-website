@@ -58,6 +58,8 @@ if (env.VITE_MEASUREMENT_ENABLED === "true") {
     assert.match(privacy, /two years/);
     assert.match(privacy, /support\.google\.com\/analytics\/answer\/7667196/);
     assert.match(privacy, /support\.google\.com\/analytics\/answer\/7318509/);
+    assert.match(privacy, /URL query-parameter redaction is on for these 24 case-insensitive keys/);
+    assert.match(privacy, /support\.google\.com\/analytics\/answer\/13544947/);
   }
   if (env.VITE_CLARITY_ID) {
     assert.match(privacy, /Microsoft Clarity/);

@@ -57,16 +57,19 @@ if (env.VITE_MEASUREMENT_ENABLED === "true") {
     assert.match(privacy, /two months/);
     assert.match(privacy, /two years/);
     assert.match(privacy, /support\.google\.com\/analytics\/answer\/7667196/);
+    assert.match(privacy, /support\.google\.com\/analytics\/answer\/7318509/);
   }
   if (env.VITE_CLARITY_ID) {
     assert.match(privacy, /Microsoft Clarity/);
-    assert.match(privacy, /page address, referrer, interaction events/);
+    assert.match(privacy, /page address, referrer information available to the browser, interaction events/);
     assert.match(privacy, /referrer URLs or clicked URLs/);
+    assert.match(privacy, /behavioural metrics, heatmaps and session replays/);
     assert.match(privacy, /_clck/);
     assert.match(privacy, /_clsk/);
     assert.match(privacy, /30 days/);
     assert.match(privacy, /nine months/);
     assert.match(privacy, /learn\.microsoft\.com\/en-us\/clarity\/faq/);
+    assert.match(privacy, /learn\.microsoft\.com\/en-us\/clarity\/setup-and-installation\/privacy-disclosure/);
   }
   assert.match(privacy, /standard contractual clauses/);
   assert.match(privacy, /Irish Data Protection Commission/);

@@ -45,6 +45,14 @@ Avoid sending names, email addresses, telephone numbers, sensitive URL parameter
 - Microsoft says EU Clarity customers contract with Microsoft Ireland Operations Limited; it stores data in Azure and describes standard contractual clauses between MIOL and Microsoft Corporation in the US. Clarity says recordings last 30 days, favorites/random samples up to nine months and heatmaps/labels up to nine months; per-user deletion requires deleting the entire project.
 - The site's local consent tests do not prove live-domain reporting, provider-side consent recognition or provider-side erasure. Do not describe Clarity as cookie-free. The privacy notice and cookie settings still require controller/adviser review before a separate activation decision.
 
+### Official wording examples and tailoring
+
+The [Irish DPC says](https://www.dataprotection.ie/en/faqs/responsibilities-data-controllers/how-do-i-make-privacy-policy) a notice should reflect the organisation's actual processing and cover details such as purposes, recipients and retention, with regular review. Its [cookie policy](https://www.dataprotection.ie/en/about-our-site/cookie-policy) is a useful structure—what cookies are, how the site uses them, and how visitors can manage them—but its own factual claim (necessary session cookies only, with no third-party or persistent cookies) is specific to the DPC site and is not copied here.
+
+[Google's disclosure policy](https://support.google.com/analytics/answer/7318509?hl=en) says a site using Analytics must disclose that use and how Analytics collects and processes data. Google's [safeguarding guidance](https://support.google.com/analytics/answer/6004245?hl=en) explains cookies/identifiers and the need to inform visitors and let them grant or deny consent; the notice describes the site's own separate opt-in and actual GA4 data flow.
+
+Microsoft's [Clarity sample wording](https://learn.microsoft.com/en-us/clarity/setup-and-installation/privacy-disclosure) suggests describing behavioural metrics, heatmaps, session replay, cookies/tracking technologies, purpose and a link to Microsoft's Privacy Statement. Its generic example also mentions Microsoft Advertising, advertising/marketing and fraud/security purposes, and says use of the site implies agreement. Those claims do not match this site's Clarity integration or explicit separate opt-in, so the wording is tailored to usability analysis and prior opt-in rather than copied verbatim.
+
 ## What each tool can and cannot show
 
 - **GA4** measures consenting human website sessions. In Traffic acquisition, review the available **AI Assistant** default channel, session source/medium, landing page and relevant outcomes. AI-assisted visits without a readable referrer may appear as Direct or another channel. Attribution rules, browser blocking and consent also affect counts. GA4 does not show every AI answer mentioning D8D.
@@ -65,12 +73,16 @@ Avoid sending names, email addresses, telephone numbers, sensitive URL parameter
 - [Irish DPC guidance on cookies and tracking](https://www.dataprotection.ie/en/dpc-guidance/guidance-cookies-and-other-tracking-technologies)
 - [Irish DPC FAQ: consent for analytics cookies](https://www.dataprotection.ie/faqs/cookies/do-i-need-consent-analytics-cookies)
 - [Irish DPC guidance on individual GDPR rights](https://www.dataprotection.ie/en/individuals/rights-individuals-under-general-data-protection-regulation)
+- [Irish DPC FAQ: making a privacy notice](https://www.dataprotection.ie/en/faqs/responsibilities-data-controllers/how-do-i-make-privacy-policy)
+- [Irish DPC cookie-policy example](https://www.dataprotection.ie/en/about-our-site/cookie-policy)
 - [Microsoft Clarity Consent Mode](https://learn.microsoft.com/en-us/clarity/setup-and-installation/consent-mode)
 - [Microsoft Clarity cookies](https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-cookies)
 - [Microsoft Clarity masking](https://learn.microsoft.com/en-us/clarity/setup-and-installation/clarity-masking)
 - [Microsoft Clarity FAQ](https://learn.microsoft.com/en-us/clarity/faq)
+- [Microsoft Clarity sample privacy disclosure](https://learn.microsoft.com/en-us/clarity/setup-and-installation/privacy-disclosure)
 - [Google Analytics safeguarding data](https://support.google.com/analytics/answer/6004245?hl=en)
 - [Google Analytics cookies](https://support.google.com/analytics/answer/11397207?hl=en)
 - [Google Analytics retention](https://support.google.com/analytics/answer/7667196?hl=en)
 - [Google Analytics data-processing terms](https://support.google.com/analytics/answer/3379636?hl=en)
 - [Google measurement transfer terms](https://support.google.com/analytics/answer/9012600?hl=en)
+- [Google Analytics Privacy Disclosures Policy](https://support.google.com/analytics/answer/7318509?hl=en)

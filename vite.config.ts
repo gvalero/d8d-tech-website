@@ -3,7 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import fs from "node:fs";
 import path from "node:path";
-import { defineConfig, type Plugin, type ViteDevServer } from "vite";
+import { defineConfig, loadEnv, type Plugin, type ViteDevServer } from "vite";
 import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
 // =============================================================================
@@ -203,12 +203,37 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
+// Verification values are public, provider-issued tokens, never login credentials.
+// Do not emit fake placeholders when the owner has not connected a service.
+function siteVerificationTags(env: Record<string, string>): Plugin {
+  return {
+    name: "site-verification-tags",
+    transformIndexHtml() {
+      const services = [
+        ["VITE_GOOGLE_SITE_VERIFICATION", "google-site-verification"],
+        ["VITE_BING_SITE_VERIFICATION", "msvalidate.01"],
+      ] as const;
+      const tags = [];
+      for (const [variable, name] of services) {
+        const value = env[variable]?.trim();
+        if (!value) continue;
+        if (!/^[A-Za-z0-9_-]{1,256}$/.test(value)) {
+          throw new Error(`Invalid ${variable}: expected a provider-issued verification token`);
+        }
+        tags.push({ tag: "meta", attrs: { name, content: value }, injectTo: "head" as const });
+      }
+      return tags;
+    },
+  };
+}
+
 export default defineConfig(({ mode }) => ({
   // The custom domain serves GitHub Pages at the root, not at /<repository>/.
   base: "/",
   plugins: [
     react(),
     tailwindcss(),
+    siteVerificationTags(loadEnv(mode, PROJECT_ROOT, "VITE_")),
     ...(mode === "production" ? [] : [jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()]),
   ],
   resolve: {

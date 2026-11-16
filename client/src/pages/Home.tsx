@@ -9,7 +9,7 @@ import {
   Sparkles,
   X,
 } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
 import BrandMark from "@/components/BrandMark";
 import MeasurementConsent from "@/components/MeasurementConsent";
 
@@ -36,7 +36,7 @@ function SectionEyebrow({ children }: { children: ReactNode }) {
 }
 
 export default function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const mobileNavigationRef = useRef<HTMLDetailsElement>(null);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -67,7 +67,9 @@ export default function Home() {
     };
   }, []);
 
-  const closeMenu = () => setMenuOpen(false);
+  const closeMenu = () => {
+    if (mobileNavigationRef.current) mobileNavigationRef.current.open = false;
+  };
 
   return (
     <div className="site-shell">
@@ -92,22 +94,18 @@ export default function Home() {
             Get in touch
           </a>
 
-          <button
-            className="menu-toggle"
-            type="button"
-            aria-expanded={menuOpen}
-            aria-controls="mobile-menu"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <span className="sr-only">{menuOpen ? "Close" : "Open"} navigation menu</span>
-            {menuOpen ? <X size={21} /> : <Menu size={22} />}
-          </button>
-        </div>
-
-        <div id="mobile-menu" className={`mobile-menu ${menuOpen ? "mobile-menu--open" : ""}`}>
-          <a href="#approach" onClick={closeMenu}>Our standard</a>
-          <a href="#audience" onClick={closeMenu}>Partners</a>
-          <a href="#contact" onClick={closeMenu}>Contact</a>
+          <details className="mobile-navigation" ref={mobileNavigationRef}>
+            <summary className="menu-toggle">
+              <span className="sr-only">Navigation menu</span>
+              <Menu className="menu-toggle__open" size={22} aria-hidden="true" />
+              <X className="menu-toggle__close" size={21} aria-hidden="true" />
+            </summary>
+            <nav className="mobile-menu" aria-label="Mobile navigation">
+              <a href="#approach" onClick={closeMenu}>Our standard</a>
+              <a href="#audience" onClick={closeMenu}>Partners</a>
+              <a href="#contact" onClick={closeMenu}>Contact</a>
+            </nav>
+          </details>
         </div>
       </header>
 
@@ -129,6 +127,7 @@ export default function Home() {
               <p className="hero__intro">
                 D8D Tech is building a clearer route to quality pre-owned smartphones—bringing considered sourcing, transparent preparation and a premium product experience to retail and wholesale partners.
               </p>
+              <p className="hero__status">Not currently accepting orders, payments or devices.</p>
               <div className="hero__actions">
                 <a className="button button--primary" href="#approach">
                   Explore our standard <ArrowDownRight size={18} />

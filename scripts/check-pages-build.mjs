@@ -47,7 +47,30 @@ assert.match(aiSummary, /https:\/\/d8dtech\.com\//);
 const privacyPage = new URL("../dist/public/privacy.html", import.meta.url);
 if (env.VITE_MEASUREMENT_ENABLED === "true") {
   assert.ok(existsSync(privacyPage), "Measurement requires a privacy notice");
-  assert.match(readFileSync(privacyPage, "utf8"), /Privacy enquiries:/);
+  const privacy = readFileSync(privacyPage, "utf8");
+  assert.match(privacy, /D8D TECH LIMITED/);
+  assert.match(privacy, /gianpaolo@d8dtech\.com/);
+  assert.match(privacy, /separate choice/);
+  if (env.VITE_GA_ID) {
+    assert.match(privacy, /Google Analytics 4/);
+    assert.match(privacy, /referring website's origin/);
+    assert.match(privacy, /two months/);
+    assert.match(privacy, /two years/);
+    assert.match(privacy, /support\.google\.com\/analytics\/answer\/7667196/);
+  }
+  if (env.VITE_CLARITY_ID) {
+    assert.match(privacy, /Microsoft Clarity/);
+    assert.match(privacy, /page address, referrer, interaction events/);
+    assert.match(privacy, /referrer URLs or clicked URLs/);
+    assert.match(privacy, /_clck/);
+    assert.match(privacy, /_clsk/);
+    assert.match(privacy, /30 days/);
+    assert.match(privacy, /nine months/);
+    assert.match(privacy, /learn\.microsoft\.com\/en-us\/clarity\/faq/);
+  }
+  assert.match(privacy, /standard contractual clauses/);
+  assert.match(privacy, /Irish Data Protection Commission/);
+  assert.match(privacy, /dataprotection\.ie\/faqs\/cookies/);
 } else {
   assert.ok(!existsSync(privacyPage), "Do not publish a placeholder privacy notice");
   assert.doesNotMatch(html, /googletagmanager\.com|clarity\.ms/, "Tracking must not load by default");

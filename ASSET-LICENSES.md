@@ -11,6 +11,7 @@
 | Standalone `8` symbol and favicon | `brand/exports/d8d-tech-symbol.svg`, `brand/exports/favicon.*` | Original vector artwork created for this prototype | Proposed artwork for owner review | Rasterised to 16, 32 and 180 px PNG plus ICO. |
 | Hero device illustration | `client/src/pages/Home.tsx`, styled in `client/src/index.css` | Original CSS composition | No third-party image incorporated | Decorative only; does not depict stock or a specific branded device. |
 | Visual reference board | `brand/preview/index.html` | Original HTML/CSS composition | No third-party image incorporated | Uses local SVG exports only. |
+| Social sharing preview | `brand/source/social-preview.html`, `client/public/social-preview.png` | Original HTML/CSS composition using the existing light-on-dark wordmark | Proposed artwork for owner review | Rendered at 1200 × 630 for link previews; no stock imagery or remote font. |
 
 ## Runtime libraries and fonts
 
@@ -22,7 +23,7 @@
 
 ## No external image, tracker or font request
 
-The site intentionally uses **no downloaded photographs, stock imagery, image CDNs, web-font CDN, analytics script, advertising pixel, customer-data service or social embed**. The `client/index.html` file contains no third-party script tag. A browser review should therefore show only local development/build requests.
+The default site uses **no downloaded photographs, stock imagery, image CDNs, web-font CDN, analytics script, advertising pixel, customer-data service or social embed**. Optional Google Analytics and Clarity scripts are disabled unless configured and activated after privacy review, and then load only after the relevant visitor opt-in. The `client/index.html` file contains no third-party script tag.
 
 ## Future-use rules
 

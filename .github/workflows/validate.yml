@@ -45,4 +45,6 @@ jobs:
           VITE_CLARITY_ID: ${{ vars.VITE_CLARITY_ID }}
           VITE_PRIVACY_OPERATOR: ${{ vars.VITE_PRIVACY_OPERATOR }}
           VITE_PRIVACY_EMAIL: ${{ vars.VITE_PRIVACY_EMAIL }}
+          VITE_GOOGLE_SITE_VERIFICATION: ${{ vars.VITE_GOOGLE_SITE_VERIFICATION }}
+          VITE_BING_SITE_VERIFICATION: ${{ vars.VITE_BING_SITE_VERIFICATION }}
         run: pnpm build:pages

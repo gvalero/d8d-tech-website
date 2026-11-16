@@ -6,7 +6,7 @@
 
 - An original **Dawn Loop** identity direction: D–8–D forms representing a quiet “next chapter” / renewal idea.
 - Editable SVG source, full-colour / light / dark / one-colour variants, transparent PNGs and a favicon set.
-- A responsive React + Vite pre-launch marketing page with clear used-phone resale, wholesale and retail positioning; it includes a non-collecting WhatsApp/email **contact pathway** that says contact details will follow at launch.
+- A responsive React + Vite pre-launch marketing page with used-phone resale, wholesale and retail positioning. Visitors can email the published `info@d8dtech.com` address; WhatsApp contact is not yet available.
 - No commerce or contact form. Optional analytics remain disabled until their IDs, controller identity, privacy contact and explicit consent handling are ready; see `SEO-AND-MEASUREMENT.md`.
 - Brand guidance, a visual reference board and a record of asset provenance.
 
@@ -27,7 +27,9 @@ Other commands:
 
 ```bash
 pnpm check     # TypeScript type check
-pnpm build     # Production-style static build to dist/
+pnpm test      # Measurement configuration and consent tests
+pnpm build:pages  # Production GitHub Pages build with crawler-visible prerendering
+pnpm build     # The same checked prerender, plus the optional static server bundle
 pnpm preview   # Preview the built output
 ```
 
@@ -66,8 +68,8 @@ Start with these files:
 ## Implementation boundaries retained
 
 - The website prominently states that the business is in preparation and is **not accepting orders, payments or devices**.
-- The end-of-page contact pathway deliberately does not invent an email address or WhatsApp number, create a dead external link or collect a visitor message; it plainly states that those contact details will follow at launch.
-- It does not invent a company number, legal name, registered address, email, delivery coverage, certification, supplier, inventory, warranty, environmental statistic or operating capacity.
+- The end-of-page contact pathway uses the owner-published `info@d8dtech.com` email; it does not provide a WhatsApp number or collect messages through a form.
+- It does not invent a company number, legal name, registered address, delivery coverage, certification, supplier, inventory, warranty, environmental statistic or operating capacity.
 - It does not include Product, Offer, review or fictional Organisation structured data.
 - It uses the owner-approved `d8dtech.com` domain and allows indexing of the factual pre-launch page.
 - It uses CSS/vector artwork rather than external visual assets; see `ASSET-LICENSES.md`.

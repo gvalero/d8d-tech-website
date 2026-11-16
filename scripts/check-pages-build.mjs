@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { loadEnv } from "vite";
 
 const env = loadEnv("production", fileURLToPath(new URL("../", import.meta.url)), "VITE_");
 const html = readFileSync(new URL("../dist/public/index.html", import.meta.url), "utf8");
+if (process.env.D8D_REQUIRE_MEASUREMENT_DISABLED === "true") {
+  assert.equal(env.VITE_MEASUREMENT_ENABLED, "false", "This release must keep measurement disabled");
+}
 
 assert.match(html, /src="\/assets\/[^"]+\.js"/, "Pages JavaScript must load from the custom domain root");
 assert.match(html, /href="\/assets\/[^"]+\.css"/, "Pages CSS must load from the custom domain root");
@@ -38,6 +41,7 @@ const robots = readFileSync(new URL("../dist/public/robots.txt", import.meta.url
 assert.match(robots, /Sitemap: https:\/\/d8dtech\.com\/sitemap\.xml/);
 assert.match(robots, /User-agent: \*\s+Allow: \//, "The public site must be crawlable");
 assert.match(robots, /User-agent: GPTBot\s+Disallow: \//);
+assert.match(robots, /User-agent: ClaudeBot\s+Disallow: \//);
 assert.match(robots, /User-agent: Google-Extended\s+Disallow: \//);
 const sitemap = readFileSync(new URL("../dist/public/sitemap.xml", import.meta.url), "utf8");
 assert.match(sitemap, /<loc>https:\/\/d8dtech\.com\/<\/loc>/);
@@ -48,8 +52,10 @@ const privacyPage = new URL("../dist/public/privacy.html", import.meta.url);
 if (env.VITE_MEASUREMENT_ENABLED === "true") {
   assert.ok(existsSync(privacyPage), "Measurement requires a privacy notice");
   const privacy = readFileSync(privacyPage, "utf8");
-  assert.match(privacy, /D8D TECH LIMITED/);
-  assert.match(privacy, /gianpaolo@d8dtech\.com/);
+  const escapeHtml = value => value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
+  assert.ok(privacy.includes(escapeHtml(env.VITE_PRIVACY_OPERATOR.trim())), "Privacy notice must contain the configured controller");
+  assert.ok(privacy.includes(escapeHtml(env.VITE_PRIVACY_EMAIL)), "Privacy notice must contain the configured contact");
+  assert.match(html, /href="\/privacy\.html"/, "Privacy notice must remain accessible from the homepage");
   assert.match(privacy, /separate choice/);
   if (env.VITE_GA_ID) {
     assert.match(privacy, /Google Analytics 4/);
@@ -78,5 +84,14 @@ if (env.VITE_MEASUREMENT_ENABLED === "true") {
   assert.match(privacy, /dataprotection\.ie\/faqs\/cookies/);
 } else {
   assert.ok(!existsSync(privacyPage), "Do not publish a placeholder privacy notice");
+  assert.doesNotMatch(html, /href="\/privacy\.html"/, "Do not link to an unpublished notice");
   assert.doesNotMatch(html, /googletagmanager\.com|clarity\.ms/, "Tracking must not load by default");
+  const assetDir = new URL("../dist/public/assets/", import.meta.url);
+  for (const file of readdirSync(assetDir).filter(name => /\.js(?:\.map)?$/.test(name))) {
+    const asset = readFileSync(new URL(file, assetDir), "utf8");
+    for (const key of ["VITE_PRIVACY_OPERATOR", "VITE_PRIVACY_EMAIL"]) {
+      const value = env[key]?.trim();
+      if (value) assert.ok(!asset.includes(value), `Disabled JavaScript must not include ${key}`);
+    }
+  }
 }

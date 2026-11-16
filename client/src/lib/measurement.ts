@@ -33,19 +33,24 @@ export const CONSENT_STORAGE_KEY = "d8d-measurement-consent";
 export const CONSENT_BLOCK_KEY = "d8d-measurement-blocked";
 export const REFERRAL_STORAGE_KEY = "d8d-accepted-referral-origin";
 export const CONSENT_MAX_AGE = 180 * 24 * 60 * 60 * 1000;
+// Increment whenever the provider purposes or visitor-facing disclosures materially change.
+export const CONSENT_VERSION = 2;
 
 export type MeasurementPreference = {
   analytics: boolean;
   recordings: boolean;
   savedAt: number;
+  version: number;
   // Bind the choice to the IDs shown when it was made. A changed provider needs a new choice.
   providers: { gaId: string | null; clarityId: string | null };
+  // A pending referral is usable only with the specific grant that created it.
+  referralToken?: string;
 };
 
 type Clarity = ((...args: unknown[]) => void) & { q?: unknown[][] };
 declare global {
   interface Window {
-    dataLayer?: unknown[][];
+    dataLayer?: IArguments[];
     gtag?: (...args: unknown[]) => void;
     clarity?: Clarity;
   }
@@ -56,6 +61,7 @@ export function makePreference(config: MeasurementConfig, analytics: boolean, re
     analytics: !!config.gaId && analytics,
     recordings: !!config.clarityId && recordings,
     savedAt: now,
+    version: CONSENT_VERSION,
     providers: { gaId: config.gaId ?? null, clarityId: config.clarityId ?? null },
   };
 }
@@ -68,6 +74,7 @@ export function parsePreference(raw: string | null, config: MeasurementConfig, n
     const p = value as Partial<MeasurementPreference>;
     if (typeof p.analytics !== "boolean" || typeof p.recordings !== "boolean" ||
         typeof p.savedAt !== "number" || !Number.isFinite(p.savedAt) ||
+        p.version !== CONSENT_VERSION ||
         p.savedAt <= 0 || p.savedAt > now || now - p.savedAt >= CONSENT_MAX_AGE ||
         !p.providers || p.providers.gaId !== (config.gaId ?? null) ||
         p.providers.clarityId !== (config.clarityId ?? null) ||
@@ -129,6 +136,20 @@ export function cookieDeletionStrings(cookieHeader: string, hostname: string, pa
   return result;
 }
 
+function clearPendingReferral(host: Window) {
+  try { host.sessionStorage.removeItem(REFERRAL_STORAGE_KEY); } catch { /* Storage can be unavailable. */ }
+}
+
+function hasNewerPendingReferral(host: Window, config: MeasurementConfig, event: StorageEvent): boolean {
+  try {
+    const pending: unknown = JSON.parse(host.sessionStorage.getItem(REFERRAL_STORAGE_KEY) ?? "null");
+    const token = pending && typeof pending === "object" ? (pending as { token?: unknown }).token : undefined;
+    const current = parsePreference(host.localStorage.getItem(CONSENT_STORAGE_KEY), config);
+    const previous = parsePreference(event.oldValue, config);
+    return typeof token === "string" && !!current?.analytics && current.referralToken === token && previous?.referralToken !== token;
+  } catch { return false; }
+}
+
 function stopMeasurement(host: Window, doc: Document, config: MeasurementConfig, providers: Providers) {
   if (providers.analytics) {
     if (config.gaId) (host as unknown as Record<string, unknown>)[`ga-disable-${config.gaId}`] = true;
@@ -156,7 +177,8 @@ function loadMeasurement(host: Window, doc: Document, preference: MeasurementPre
   if (preference.analytics && config.gaId && !doc.querySelector('script[data-d8d-measurement="ga"]')) {
     (host as unknown as Record<string, unknown>)[`ga-disable-${config.gaId}`] = false;
     host.dataLayer = host.dataLayer || [];
-    host.gtag = (...args) => host.dataLayer!.push(args);
+    // The Google tag recognizes gtag commands as Arguments objects, not plain arrays.
+    host.gtag = function () { host.dataLayer!.push(arguments); };
     host.gtag("consent", "default", { analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" });
     host.gtag("js", new Date());
     // Consent may have reloaded the page; recover the origin captured at the time of opt-in.
@@ -165,8 +187,16 @@ function loadMeasurement(host: Window, doc: Document, preference: MeasurementPre
     try {
       const savedReferrer = host.sessionStorage.getItem(REFERRAL_STORAGE_KEY);
       if (savedReferrer !== null) {
-        pageReferrer = referralOrigin(savedReferrer, host.location.origin);
+        // A stale or unreadable pending referral must not fall back to the old document referrer.
+        pageReferrer = "";
         host.sessionStorage.removeItem(REFERRAL_STORAGE_KEY);
+        const pending: unknown = JSON.parse(savedReferrer);
+        if (pending && typeof pending === "object") {
+          const { origin, token } = pending as { origin?: unknown; token?: unknown };
+          if (typeof origin === "string" && typeof token === "string" && token === preference.referralToken) {
+            pageReferrer = referralOrigin(origin, host.location.origin);
+          }
+        }
       }
     } catch { /* A missing referral is preferable to collecting extra data. */ }
     host.gtag("config", config.gaId, {
@@ -200,6 +230,8 @@ export type ConsentState = { preference: MeasurementPreference | null; error: bo
 export class MeasurementConsentController {
   private current: MeasurementPreference | null = null;
   private active: Providers = { analytics: false, recordings: false };
+  // Removing script elements or resetting active cannot unload code already run in this document.
+  private providerCodeMayBeResident = false;
   private timer: number | undefined;
   private channel: BroadcastChannel | undefined;
   private blockedUntilSave = false;
@@ -245,19 +277,25 @@ export class MeasurementConsentController {
   private onBroadcast = (event: MessageEvent) => {
     if (event.data !== "withdraw") return;
     // A failed storage write elsewhere cannot be trusted to have updated our stored grant.
-    const hadActive = this.active.analytics || this.active.recordings;
+    const hadResident = this.providerCodeMayBeResident;
     this.blockedUntilSave = true;
     const guarded = this.block();
+    clearPendingReferral(this.host);
     stopMeasurement(this.host, this.doc, this.config, ALL);
     this.active = { analytics: false, recordings: false };
     this.current = null;
     if (this.timer !== undefined) this.host.clearTimeout(this.timer);
     this.onChange({ preference: null, error: true });
-    if (hadActive && guarded) this.host.location.reload();
+    if (hadResident && guarded) this.host.location.reload();
   };
 
   private onStorage = (event: StorageEvent) => {
-    if (event.key === CONSENT_STORAGE_KEY || event.key === null) this.sync();
+    if (event.key === CONSENT_STORAGE_KEY || event.key === null) {
+      // Process a delayed withdrawal, but keep a pending referral belonging to a genuinely newer grant.
+      if ((event.key === null || !parsePreference(event.newValue, this.config)?.analytics) &&
+          !hasNewerPendingReferral(this.host, this.config, event)) clearPendingReferral(this.host);
+      this.sync();
+    }
   };
 
   private schedule(preference: MeasurementPreference) {
@@ -277,7 +315,8 @@ export class MeasurementConsentController {
     } catch { unavailable = true; }
     const next = unavailable ? null : parsePreference(raw, this.config);
     if (!next) {
-      const hadActive = this.active.analytics || this.active.recordings;
+      const hadResident = this.providerCodeMayBeResident;
+      clearPendingReferral(this.host);
       let safeToReload = false;
       let removeFailed = false;
       if (raw !== null) {
@@ -292,10 +331,19 @@ export class MeasurementConsentController {
       this.current = null;
       if (this.timer !== undefined) this.host.clearTimeout(this.timer);
       this.onChange({ preference: null, error: unavailable || removeFailed });
-      if (hadActive) {
+      if (hadResident) {
         if (unavailable || removeFailed) this.announceWithdrawal();
         if (safeToReload) this.host.location.reload();
       }
+      return;
+    }
+    if (!next.analytics) clearPendingReferral(this.host);
+    if (this.providerCodeMayBeResident && !this.current) {
+      // A failed withdrawal reset our state, not the vendor code. Never report a
+      // successful recovery in this document while a safe reload is still pending.
+      stopMeasurement(this.host, this.doc, this.config, ALL);
+      this.onChange({ preference: null, error: true });
+      this.host.location.reload();
       return;
     }
     if (this.current && JSON.stringify(this.current) !== JSON.stringify(next)) {
@@ -309,6 +357,7 @@ export class MeasurementConsentController {
     if (!next.analytics || !next.recordings) {
       stopMeasurement(this.host, this.doc, this.config, { analytics: !next.analytics, recordings: !next.recordings });
     }
+    if (next.analytics || next.recordings) this.providerCodeMayBeResident = true;
     loadMeasurement(this.host, this.doc, next, this.config);
     this.active = { analytics: next.analytics, recordings: next.recordings };
     this.schedule(next);
@@ -316,22 +365,39 @@ export class MeasurementConsentController {
 
   save(analytics: boolean, recordings: boolean) {
     const preference = makePreference(this.config, analytics, recordings);
+    const hadResident = this.providerCodeMayBeResident;
+    const captureReferral = preference.analytics && !this.active.analytics;
+    if (captureReferral) {
+      // Without a unique token, discard the pending referral rather than risk reusing it for a later grant.
+      try { preference.referralToken = this.host.crypto?.randomUUID?.(); } catch { /* The first opt-in still has its document referrer. */ }
+    } else if (!preference.analytics) clearPendingReferral(this.host);
     // Rejection and withdrawal take effect even if persisting the choice fails.
     stopMeasurement(this.host, this.doc, this.config, { analytics: !preference.analytics, recordings: !preference.recordings });
     try {
       this.host.localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(preference));
-      // Save the origin only after an affirmative analytics choice, for this tab's reload.
-      if (preference.analytics && !this.active.analytics) {
-        this.host.sessionStorage.setItem(REFERRAL_STORAGE_KEY, referralOrigin(this.doc.referrer, this.host.location.origin));
+      // Save the origin only after an affirmative analytics choice, until the page-view is queued.
+      if (captureReferral && preference.referralToken) {
+        this.host.sessionStorage.setItem(REFERRAL_STORAGE_KEY, JSON.stringify({
+          origin: referralOrigin(this.doc.referrer, this.host.location.origin), token: preference.referralToken,
+        }));
+      } else if (captureReferral) {
+        this.host.sessionStorage.removeItem(REFERRAL_STORAGE_KEY);
       } else if (!preference.analytics) {
         this.host.sessionStorage.removeItem(REFERRAL_STORAGE_KEY);
       }
       this.host.sessionStorage.removeItem(CONSENT_BLOCK_KEY);
       this.blockedUntilSave = false;
-      this.host.location.reload();
+      if (hadResident) {
+        // Running vendor code cannot be reliably unloaded in the current document.
+        this.host.location.reload();
+      } else {
+        // First opt-in needs no reload; retain the original external referrer.
+        this.current = null;
+        this.sync();
+      }
     } catch {
-      const hadActive = this.active.analytics || this.active.recordings;
       this.blockedUntilSave = true;
+      clearPendingReferral(this.host);
       stopMeasurement(this.host, this.doc, this.config, ALL);
       this.active = { analytics: false, recordings: false };
       this.current = null;
@@ -341,7 +407,7 @@ export class MeasurementConsentController {
       try { this.host.localStorage.removeItem(CONSENT_STORAGE_KEY); removed = true; } catch { /* Previous choice might remain. */ }
       this.announceWithdrawal();
       this.onChange({ preference: null, error: true });
-      if (hadActive && (guarded || removed)) this.host.location.reload();
+      if (this.providerCodeMayBeResident && (guarded || removed)) this.host.location.reload();
     }
   }
 }

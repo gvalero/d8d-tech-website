@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { type ReactNode, useEffect, useRef } from "react";
 import BrandMark from "@/components/BrandMark";
-import MeasurementConsent from "@/components/MeasurementConsent";
+import MeasurementConsent, { measurementConfigured } from "@/components/MeasurementConsent";
 
 const approach = [
   {
@@ -290,6 +290,7 @@ export default function Home() {
         <div className="site-footer__bottom">
           <p>© {new Date().getFullYear()} D8D Tech.</p>
           <p>Enquiries welcome. Not currently accepting orders.</p>
+          {measurementConfigured && <a href="/privacy.html">Privacy notice</a>}
         </div>
       </footer>
       <MeasurementConsent />

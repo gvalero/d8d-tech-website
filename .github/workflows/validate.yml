@@ -41,6 +41,7 @@ jobs:
       - name: Build Pages artifact
         # Public measurement metadata is versioned in .env.production; its gate stays false.
         env:
+          D8D_REQUIRE_MEASUREMENT_DISABLED: "true"
           VITE_GOOGLE_SITE_VERIFICATION: ${{ vars.VITE_GOOGLE_SITE_VERIFICATION }}
           VITE_BING_SITE_VERIFICATION: ${{ vars.VITE_BING_SITE_VERIFICATION }}
         run: pnpm build:pages
